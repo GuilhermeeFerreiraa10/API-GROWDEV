@@ -8,7 +8,12 @@ app.use(express.json());
 //Criar ROTAS
 app.get("/hello", (req, res) => {
     console.log("Hello!");
-    res.send("Hello response!");
+
+    res.send({
+     nome: "Guilherme",
+     email: "gui@example.com",
+     idade: "19"
+    });
 });
 
 const porta = process.env.PORT;
