@@ -2,6 +2,7 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import { growdevers } from './dados.js';
 import { randomUUID } from 'crypto';
+import { ok } from 'assert';
 
 dotenv.config();
 
@@ -39,6 +40,26 @@ app.post("/growdevers", (req,res) => {
     });
 });
 
+// GET /growdevers/:ID
+app.get("/growdevers/:id", () => {
+    // 1 - entrada
+    const { id } = req.params;
+
+    // 2 - processamento
+    const growder = growdevers.find((item) => item.id === id);
+    if(!growder) {
+        return res.status(404).send({
+            ok: false,
+            mensagem: "Growdever não encontrado"
+        });
+    }
+    // 3 - saida
+    res.status(200).send({
+        ok: true,
+        mensgem: "Growdevers encontrado",
+        dados: growder
+    })
+});
 
 const porta = process.env.PORT;
 app.listen(porta, () => {
