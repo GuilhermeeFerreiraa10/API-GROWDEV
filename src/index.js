@@ -1,18 +1,19 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
+import { growdevers } from './dados.js';
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-//Criar ROTAS
-app.get("/hello", (req, res) => {
-    console.log("Hello!");
-
-    res.send({
-     nome: "Guilherme",
-     email: "gui@example.com",
-     idade: "19"
+//CRIANDO ROTAS
+// GET /growdevers - Listar growdevers
+app.get("/growdevers", (req, res) => {
+    res.status(200).send({
+        ok: true,
+        mensagem: "Growdevers testados com sucesso",
+        dados: growdevers
     });
 });
 
