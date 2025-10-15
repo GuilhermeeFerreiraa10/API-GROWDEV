@@ -10,7 +10,7 @@ app.use(express.json());
 //CRIANDO ROTAS
 // GET /growdevers - Listar growdevers
 app.get("/growdevers", (req,res) => {
-    const { idade, nome, email } = req.query;
+    const { idade, nome, email, email_includes } = req.query;
 
     let dados = growdevers;
     if(idade) {
@@ -23,13 +23,17 @@ app.get("/growdevers", (req,res) => {
     // Filtro por igualdade de e-mail
 if (email) {
     dados = dados.filter(item => item.email === email);
+}
 
-    res.status(200).send({
+if(email_includes) {
+    dados = dados.filter(item => item.email.includes(email_includes))
+}
+ res.status(200).send({
         ok: true,
         mensagem: "Growdevers testados com sucesso",
         dados
     });
-}
+    
 });
 
 //POST /growdeevers - Criar um gorwdever
