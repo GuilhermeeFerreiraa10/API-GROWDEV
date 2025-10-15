@@ -2,7 +2,6 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import { growdevers } from './dados.js';
 import { randomUUID } from 'crypto';
-import { ok } from 'assert';
 
 dotenv.config();
 
@@ -11,13 +10,29 @@ app.use(express.json());
 //CRIANDO ROTAS
 // GET /growdevers - Listar growdevers
 app.get("/growdevers", (req,res) => {
+    const { idade, nome, email } = req.query;
+
+    let dados = growdevers;
+    if(idade) {
+        dados = dados.filter(item => item.idade >= Number(idade));
+    }
+
+    if(nome) {
+        dados = dados.filter(item => item.nome.includes(nome));
+    }
+    // Filtro por igualdade de e-mail
+if (email) {
+    dados = dados.filter(item => item.email === email);
+
     res.status(200).send({
         ok: true,
         mensagem: "Growdevers testados com sucesso",
-        dados: growdevers
+        dados
     });
+}
 });
 
+//POST /growdeevers - Criar um gorwdever
 app.post("/growdevers", (req,res) => {
     //1 - começo
     const body = req.body;  
@@ -41,13 +56,13 @@ app.post("/growdevers", (req,res) => {
 });
 
 // GET /growdevers/:ID
-app.get("/growdevers/:id", () => {
+app.get("/growdevers/:id", (req,res) => {
     // 1 - entrada
     const { id } = req.params;
 
     // 2 - processamento
-    const growder = growdevers.find((item) => item.id === id);
-    if(!growder) {
+    const growdever = growdevers.find((item) => item.id === id);
+    if(!growdever) {
         return res.status(404).send({
             ok: false,
             mensagem: "Growdever não encontrado"
@@ -57,7 +72,7 @@ app.get("/growdevers/:id", () => {
     res.status(200).send({
         ok: true,
         mensgem: "Growdevers encontrado",
-        dados: growder
+        dados: growdever
     })
 });
 
