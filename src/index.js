@@ -1,3 +1,4 @@
+//Importações nos códigos
 import express from 'express';
 import * as dotenv from 'dotenv';
 import { growdevers } from './dados.js';
@@ -156,6 +157,7 @@ app.delete("/growdever/:id", (req,res) => {
     });
 });
 
+//PORTA do servidor
 const porta = process.env.PORT;
 app.listen(porta, () => {
     console.log("Servidor está Aberto!" + porta);
