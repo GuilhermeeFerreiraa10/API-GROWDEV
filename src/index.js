@@ -59,7 +59,7 @@ app.post("/growdevers", (req,res) => {
     });
 });
 
-// GET /growdevers/:ID
+// GET /growdevers/:ID - Puxar um growdever
 app.get("/growdevers/:id", (req,res) => {
     // 1 - entrada
     const { id } = req.params;
@@ -78,6 +78,82 @@ app.get("/growdevers/:id", (req,res) => {
         mensgem: "Growdevers encontrado",
         dados: growdever
     })
+});
+
+//PUT /growdevers/:ID - Atualizar
+app.put("/growdevers/:id", (req,res) => {
+    // 1 - entrada 
+    const { id } = req.params;
+    const { nome, email, idade, matriculado } = req.body;
+
+    // 2 - processamento
+    const growdever = growdevers.find(item => item.id === id);
+if(!growdever) {
+    return res.status(404).send({
+        ok: false,
+        mensagem: "Growdever não encontrado"
+    });
+}
+
+    growdever.nome = nome;
+    growdever.email = email;
+    growdever.idade = idade;
+    growdever.matriculado = matriculado;
+
+    // 3 - saida
+    res.status(200).send({
+        ok: true,
+        mensage: "Growdever atualizadao com sucesso",
+        dados: growdevers
+    });
+});
+
+// PATCH /growdevers/:ID - Toggle do campo matriculado
+app.patch("/growdevers/:id", (req,res) => {
+    // 1- entrada
+    const { id } = req.params;
+
+    // 2- processamento
+    const growdever = growdevers.find(item => item.id === id);
+    if(!growdever) {
+        return res.status(404).send({
+            ok: false,
+            mensage: "Growdever não encontrado"
+        })
+    }
+
+    growdever.matriculado = matriculado;
+
+    // 3- saida
+    res.status(200).send({
+        ok: true,
+        mensage: "Growdever atualizado (matriculado) com sucesso",
+        dados: growdevers
+    });
+});
+
+//DELETE /growdevers/:ID - Deletar um usuario(growdever) da lista
+app.delete("/growdever/:id", (req,res) => {
+    // 1 - entrada
+    const { id } = req.params;
+
+    // 2 - processamento
+    const growdeverIndex = growdevers.findIndex(item => item.id === id);
+    if(growdeverIndex < 0) {
+        return res.status(404).send({
+            ok: false,
+            mensagem: "Growdever não encontrado"
+        });
+    }
+
+    growdevers.splice(growdeverIndex, 1);
+
+    // 3 - saida
+    res.status(200).send({
+        ok: true,
+        mensagem: "Growdever excluido com sucesso!",
+        dados: growdevers
+    });
 });
 
 const porta = process.env.PORT;
