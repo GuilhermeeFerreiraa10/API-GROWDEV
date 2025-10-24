@@ -10,6 +10,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(logMiddleware);
+app.use(cors());
 
 //CRIANDO ROTAS
 // GET /growdevers - Listar growdevers
