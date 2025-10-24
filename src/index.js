@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import { growdevers } from './dados.js';
 import { randomUUID } from 'crypto';
 import { logMiddleware, logRequestMiddleware, validateGrowdeverMiddleware ,validateGrowdeverMatriculadoMiddleware, logBody } from './middleware.js';
+import cors from 'cors';
 
 dotenv.config();
 

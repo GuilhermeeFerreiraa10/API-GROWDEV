@@ -1,4 +1,4 @@
-import { growdevers } from "./dados";
+import { growdevers } from "./dados.js";
 
 export const logMiddleware = (res, req, next) => {
  console.log("Hello middleware!!");
