@@ -3,14 +3,17 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import { growdevers } from './dados.js';
 import { randomUUID } from 'crypto';
+import { logMiddleware, logRequestMiddleware, validateGrowdeverMiddleware ,validateGrowdeverMatriculadoMiddleware, logBody } from './middleware.js';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(logMiddleware);
+
 //CRIANDO ROTAS
 // GET /growdevers - Listar growdevers
-app.get("/growdevers", (req,res) => {
+app.get("/growdevers", [logRequestMiddleware], (req,res) => {
     const { idade, nome, email, email_includes } = req.query;
 
     let dados = growdevers;
@@ -38,9 +41,11 @@ if(email_includes) {
 });
 
 //POST /growdeevers - Criar um gorwdever
-app.post("/growdevers", (req,res) => {
+app.post("/growdevers", [logBody,validateGrowdeverMiddleware],(req,res) => {
+    try {
     //1 - começo
     const body = req.body;  
+
     const novoGrowdever = {
         id: randomUUID(),
         nome: body.nome,
@@ -57,11 +62,17 @@ app.post("/growdevers", (req,res) => {
         ok: true,
         mensage: "Growdever criado com sucesso",
         dados: growdevers
-    });
+    });    
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            ok: false,
+            mensagem: error.toString()
+        });
+    }
 });
-
 // GET /growdevers/:ID - Puxar um growdever
-app.get("/growdevers/:id", (req,res) => {
+app.get("/growdevers/:id", [logRequestMiddleware], (req,res) => {
     // 1 - entrada
     const { id } = req.params;
 
@@ -82,7 +93,8 @@ app.get("/growdevers/:id", (req,res) => {
 });
 
 //PUT /growdevers/:ID - Atualizar
-app.put("/growdevers/:id", (req,res) => {
+app.put("/growdevers/:id", [logBody, validateGrowdeverMiddleware, 
+    validateGrowdeverMatriculadoMiddleware], (req,res) => {
     // 1 - entrada 
     const { id } = req.params;
     const { nome, email, idade, matriculado } = req.body;
