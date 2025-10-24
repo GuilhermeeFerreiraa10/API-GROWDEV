@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(logMiddleware);
 app.use(cors());
 
+
 //CRIANDO ROTAS
 // GET /growdevers - Listar growdevers
 app.get("/growdevers", [logRequestMiddleware], (req,res) => {
